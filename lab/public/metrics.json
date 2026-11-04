@@ -1,0 +1,77 @@
+{
+  "measuredAt": "2026-10-19T13:27:09.733Z",
+  "runs": 3,
+  "node": "v24.19.0",
+  "results": [
+    {
+      "name": "monolith",
+      "arch": "monolith",
+      "buildMs": 1072,
+      "runs": [
+        1063,
+        1072,
+        1097
+      ],
+      "jsBytes": 316065,
+      "artifactGzipBytes": 102420,
+      "gzipBytes": 102420,
+      "files": 1
+    },
+    {
+      "name": "shell",
+      "arch": "mf",
+      "buildMs": 1149,
+      "runs": [
+        1108,
+        1149,
+        1324
+      ],
+      "jsBytes": 244471,
+      "artifactGzipBytes": 77804,
+      "gzipBytes": 77804,
+      "files": 7
+    },
+    {
+      "name": "catalog",
+      "arch": "mf",
+      "buildMs": 1272,
+      "runs": [
+        1269,
+        1272,
+        1324
+      ],
+      "jsBytes": 236343,
+      "artifactGzipBytes": 76518,
+      "gzipBytes": 7809,
+      "files": 13
+    },
+    {
+      "name": "checkout",
+      "arch": "mf",
+      "buildMs": 1356,
+      "runs": [
+        1312,
+        1356,
+        1360
+      ],
+      "jsBytes": 237125,
+      "artifactGzipBytes": 76623,
+      "gzipBytes": 7914,
+      "files": 13
+    },
+    {
+      "name": "reviews",
+      "arch": "mf",
+      "buildMs": 1343,
+      "runs": [
+        1307,
+        1343,
+        1344
+      ],
+      "jsBytes": 127351,
+      "artifactGzipBytes": 49524,
+      "gzipBytes": 49524,
+      "files": 8
+    }
+  ]
+}

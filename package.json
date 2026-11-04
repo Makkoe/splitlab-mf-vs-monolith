@@ -1,0 +1,38 @@
+{
+  "name": "mf-vs-monolith",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Master's thesis research platform: micro-frontends vs monolith (same marketplace, two architectures, live comparison lab)",
+  "workspaces": [
+    "mf/shell",
+    "mf/catalog",
+    "mf/checkout",
+    "mf/reviews",
+    "monolith",
+    "lab",
+    "defense",
+    "presentation"
+  ],
+  "scripts": {
+    "build:remotes": "npm run build -w mf/catalog -w mf/checkout -w mf/reviews",
+    "serve:remotes": "concurrently -n catalog,checkout,reviews -c blue,magenta,green \"npm run preview -w mf/catalog\" \"npm run preview -w mf/checkout\" \"npm run preview -w mf/reviews\"",
+    "start": "npm run build:remotes && concurrently -k -n remotes,shell,monolith,defense -c gray,cyan,yellow,green \"npm run serve:remotes\" \"npm run dev -w mf/shell\" \"npm run dev -w monolith\" \"npm run dev -w defense\"",
+    "start:lab": "npm run build:remotes && concurrently -k -n remotes,shell,monolith,lab -c gray,cyan,yellow,green \"npm run serve:remotes\" \"npm run dev -w mf/shell\" \"npm run dev -w monolith\" \"npm run dev -w lab\"",
+    "slides": "npm run dev -w presentation",
+    "measure": "node scripts/measure.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.4.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.5.2",
+    "concurrently": "^9.1.2",
+    "typescript": "~6.0.2",
+    "vite": "^6.3.5"
+  }
+}
