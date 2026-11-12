@@ -4,9 +4,9 @@ const MAP = [
   ['Предмет (5)', '#subject', 'MF vs моноліт для одного маркетплейсу, виміряно порівняльно.'],
   ['Задача (5)', '#problem', 'Контрольований експеримент зі сталим кодом функцій.'],
   ['Рішення (5)', '#solution', 'Подвійна архітектура + Module Federation + спільний HostApp.'],
-  ['Результати досліджень (10)', '#arena', 'Arena, Metrics, Deploy, Teams — живі докази.'],
-  ['ПЗ (5)', '#software', 'Модулі workspace, remotes, лабораторія, скрипт measure.'],
-  ['Тестування (5)', '#testing', 'Старт, кошик, крос-фреймворк, збій, деплой, чекліст метрик.'],
+  ['Результати досліджень (10)', '#arena', 'Arena, Metrics, Runtime, Deploy (live release), Teams.'],
+  ['ПЗ (5)', '#software', 'Модулі workspace, remotes, lab-control, measure.'],
+  ['Тестування (5)', '#testing', 'Автотести портів/release + ручний чекліст.'],
 ]
 
 export function Takeaways() {
@@ -63,14 +63,14 @@ export function Takeaways() {
           <li>
             <b>03</b>
             <span>
-              Пройти <a href="#metrics">Metrics</a> + <a href="#deploy">Deploy</a> + <a href="#teams">Teams</a> як результати
-              досліджень.
+              Пройти <a href="#metrics">Metrics</a> + <a href="#runtime">Runtime</a> + живий реліз у{' '}
+              <a href="#deploy">Deploy</a> + <a href="#teams">Teams</a>.
             </span>
           </li>
           <li>
             <b>04</b>
             <span>
-              Вказати на <a href="#software">ПЗ</a> і відмітити кейси <a href="#testing">Тестування</a>.
+              Автотести в <a href="#testing">Тестування</a> і експорт <a href="#report">Звіту</a>.
             </span>
           </li>
           <li>

@@ -15,9 +15,11 @@
   ],
   "scripts": {
     "build:remotes": "npm run build -w mf/catalog -w mf/checkout -w mf/reviews",
+    "build:monolith": "npm run build -w monolith",
     "serve:remotes": "concurrently -n catalog,checkout,reviews -c blue,magenta,green \"npm run preview -w mf/catalog\" \"npm run preview -w mf/checkout\" \"npm run preview -w mf/reviews\"",
-    "start": "npm run build:remotes && concurrently -k -n remotes,shell,monolith,defense -c gray,cyan,yellow,green \"npm run serve:remotes\" \"npm run dev -w mf/shell\" \"npm run dev -w monolith\" \"npm run dev -w defense\"",
-    "start:lab": "npm run build:remotes && concurrently -k -n remotes,shell,monolith,lab -c gray,cyan,yellow,green \"npm run serve:remotes\" \"npm run dev -w mf/shell\" \"npm run dev -w monolith\" \"npm run dev -w lab\"",
+    "lab-control": "node scripts/lab-control.mjs",
+    "start": "npm run build:remotes && npm run build:monolith && concurrently -k -n remotes,shell,monolith,defense,labapi -c gray,cyan,yellow,green,magenta \"npm run serve:remotes\" \"npm run dev -w mf/shell\" \"npm run preview -w monolith -- --port 5300 --strictPort\" \"npm run dev -w defense\" \"npm run lab-control\"",
+    "start:lab": "npm run build:remotes && concurrently -k -n remotes,shell,monolith,lab,labapi -c gray,cyan,yellow,green,magenta \"npm run serve:remotes\" \"npm run dev -w mf/shell\" \"npm run dev -w monolith\" \"npm run dev -w lab\" \"npm run lab-control\"",
     "slides": "npm run dev -w presentation",
     "measure": "node scripts/measure.mjs"
   },

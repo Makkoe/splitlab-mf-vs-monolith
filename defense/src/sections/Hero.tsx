@@ -19,7 +19,7 @@ export function Hero() {
             Рамки дослідження
           </a>
         </div>
-        <p className="hero-meta">Демо для захисту · Module Federation · React + Vue · FeIm-12 · критерії на 45 балів</p>
+        <p className="hero-meta">Живі експерименти · незалежний реліз · runtime-метрики · lab-control · ФеІм-12</p>
       </div>
     </header>
   )

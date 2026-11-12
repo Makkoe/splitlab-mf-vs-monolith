@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { labApi, type RemoteStatus } from '../labApi'
 
 const MODULES = ['catalog', 'reviews', 'checkout'] as const
 interface Ev { source: string; type: string; ts: number; arch: 'mf' | 'monolith' }
@@ -16,8 +17,23 @@ export function Arena() {
   const [nonce, setNonce] = useState(0)
   const [log, setLog] = useState<Ev[]>([])
   const [status, setStatus] = useState<{ mf: string[]; mono: boolean }>({ mf: [], mono: false })
+  const [remotes, setRemotes] = useState<Record<string, RemoteStatus> | null>(null)
+  const [busy, setBusy] = useState<string | null>(null)
+  const [apiErr, setApiErr] = useState<string | null>(null)
   const mfUp = useReachable('http://localhost:5200/', nonce)
   const monoUp = useReachable('http://localhost:5300/', nonce)
+
+  const refreshRemotes = () =>
+    labApi
+      .remotes()
+      .then(setRemotes)
+      .catch(() => setRemotes(null))
+
+  useEffect(() => {
+    refreshRemotes()
+    const t = setInterval(refreshRemotes, 4000)
+    return () => clearInterval(t)
+  }, [])
 
   useEffect(() => {
     const h = (e: MessageEvent) => {
@@ -38,9 +54,25 @@ export function Arena() {
   }
   useEffect(apply, [fail]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const controlRemote = async (name: string, action: 'stop' | 'start') => {
+    setBusy(`${action}:${name}`)
+    setApiErr(null)
+    try {
+      const r = action === 'stop' ? await labApi.stop(name) : await labApi.start(name)
+      setRemotes(r.remotes)
+      setNonce((n) => n + 1)
+    } catch (e) {
+      setApiErr(String((e as Error).message || e) + ' — запустіть lab-control (:5111)')
+    } finally {
+      setBusy(null)
+    }
+  }
+
   const q = fail.length ? `?fail=${fail.join(',')}` : ''
   const shopModules = MODULES.filter((m) => m !== 'checkout')
-  const mfAvail = Math.round(((shopModules.length - fail.filter((f) => f !== 'checkout').length) / shopModules.length) * 100)
+  const networkDown = MODULES.filter((m) => remotes && remotes[m] && !remotes[m].up)
+  const mfFailCount = new Set([...fail.filter((f) => f !== 'checkout'), ...networkDown.filter((m) => m !== 'checkout')]).size
+  const mfAvail = Math.round(((shopModules.length - Math.min(mfFailCount, shopModules.length)) / shopModules.length) * 100)
   const monoAvail = fail.some((f) => f !== 'checkout') ? 0 : 100
 
   const frame = (arch: 'mf' | 'monolith', port: number, up: boolean | null) => (
@@ -72,8 +104,8 @@ export function Arena() {
         </span>
         <span className="muted" style={{ marginLeft: 'auto', color: '#8b97a5' }}>
           {arch === 'mf'
-            ? status.mf.length
-              ? `ізольовано: ${status.mf.join(', ')}`
+            ? status.mf.length || networkDown.length
+              ? `ізольовано: ${[...status.mf, ...networkDown].filter((v, i, a) => a.indexOf(v) === i).join(', ')}`
               : 'усі межі здорові'
             : status.mono
               ? 'увесь застосунок впав'
@@ -91,12 +123,12 @@ export function Arena() {
           Chaos <span className="mf">Arena</span>
         </h2>
         <p className="lead">
-          Обидва вітрини працюють поруч. Введіть збій у будь-який модуль. У моноліті дефект поширюється до кореня;
-          у мікрофронтенд-оболонці він лишається всередині межі модуля. Також можна зупинити remote-сервер для реальної мережевої відмови.
+          Два експерименти поруч: інʼєкція runtime-збою в модуль і реальна мережева відмова remote (stop/start через
+          lab-control). У моноліті дефект йде до кореня; у MF — лишається в межі слота.
         </p>
       </div>
       <div className="arena-controls reveal">
-        <b style={{ fontSize: 14 }}>Ввести збій:</b>
+        <b style={{ fontSize: 14 }}>Ввести збій (код):</b>
         {MODULES.map((m) => (
           <div key={m} className={`toggle ${fail.includes(m) ? 'on' : ''}`} onClick={() => toggle(m)}>
             <span className="switch" /> {m}
@@ -109,6 +141,45 @@ export function Arena() {
           Скинути
         </button>
       </div>
+
+      <div className="panel reveal" style={{ marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+          <b>Мережева відмова remote</b>
+          <span className="muted" style={{ fontSize: 13 }}>
+            lab-control :5111 · stop вбиває preview-процес на порті
+          </span>
+        </div>
+        {apiErr && <div className="note warn" style={{ marginTop: 0 }}>{apiErr}</div>}
+        <div className="arena-controls" style={{ marginBottom: 0 }}>
+          {MODULES.map((m) => {
+            const st = remotes?.[m]
+            return (
+              <div key={m} className="remote-chip">
+                <span className={`dot ${st?.up ? 'ok' : 'bad'}`} />
+                <b>{m}</b>
+                <span className="muted">:{st?.port ?? '—'} · v{st?.version ?? '?'}</span>
+                <button
+                  type="button"
+                  className="btn btn-sm"
+                  disabled={!!busy || !st?.up}
+                  onClick={() => controlRemote(m, 'stop')}
+                >
+                  {busy === `stop:${m}` ? '…' : 'Stop'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-sm"
+                  disabled={!!busy || !!st?.up}
+                  onClick={() => controlRemote(m, 'start')}
+                >
+                  {busy === `start:${m}` ? '…' : 'Start'}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
       <div className="frames reveal">
         {frame('monolith', 5300, monoUp)}
         {frame('mf', 5200, mfUp)}

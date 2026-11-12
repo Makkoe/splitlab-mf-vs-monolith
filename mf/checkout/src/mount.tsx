@@ -4,8 +4,9 @@ import { formatUAH, type CartItem } from '../../../shared/products'
 import { emit } from '../../../shared/bus'
 import { injectStyles } from '../../../shared/styles'
 import { css } from './styles'
+import versionInfo from '../version.json'
 
-export const meta = { name: 'checkout', team: 'Команда Payments', framework: 'React 19', version: '1.8.0' }
+export const meta = { name: 'checkout', team: 'Команда Payments', framework: 'React 19', version: versionInfo.version }
 
 interface Props { items: CartItem[] }
 

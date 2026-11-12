@@ -4,8 +4,9 @@ import { PRODUCTS, CATEGORIES, formatUAH, type Product } from '../../../shared/p
 import { emit, on } from '../../../shared/bus'
 import { injectStyles } from '../../../shared/styles'
 import { css } from './styles'
+import versionInfo from '../version.json'
 
-export const meta = { name: 'catalog', team: 'Команда Discovery', framework: 'React 19', version: '2.3.1' }
+export const meta = { name: 'catalog', team: 'Команда Discovery', framework: 'React 19', version: versionInfo.version }
 
 function Catalog() {
   const [cat, setCat] = useState('all')

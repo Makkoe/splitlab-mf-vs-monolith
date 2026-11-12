@@ -42,9 +42,33 @@ for (const t of targets) {
   console.log(`${t.name.padEnd(10)} median ${r.buildMs} ms  js ${(raw / 1024).toFixed(1)} KB  gzip ${(gz / 1024).toFixed(1)} KB  runtime gzip ${(runtimeGz / 1024).toFixed(1)} KB`)
 }
 
-const payload = JSON.stringify({ measuredAt: new Date().toISOString(), runs: RUNS, node: process.version, results }, null, 2)
+const measuredAt = new Date().toISOString()
+const payloadObj = { measuredAt, runs: RUNS, node: process.version, results }
+const payload = JSON.stringify(payloadObj, null, 2)
 for (const dir of ['lab/public', 'defense/public']) {
   mkdirSync(join(root, dir), { recursive: true })
   writeFileSync(join(root, dir, 'metrics.json'), payload)
   console.log(`\n✔ ${dir}/metrics.json written`)
 }
+
+// Append to history for trend charts in SPLITLAB
+const historyFile = join(root, 'defense/public/metrics-history.json')
+let history = []
+try {
+  history = JSON.parse(readFileSync(historyFile, 'utf8'))
+  if (!Array.isArray(history)) history = []
+} catch {
+  history = []
+}
+history.push({
+  measuredAt,
+  node: process.version,
+  results: results.map((r) => ({
+    name: r.name,
+    arch: r.arch,
+    buildMs: r.buildMs,
+    gzipBytes: r.gzipBytes,
+  })),
+})
+writeFileSync(historyFile, JSON.stringify(history.slice(-30), null, 2))
+console.log(`✔ defense/public/metrics-history.json (${history.length} snapshots)`)

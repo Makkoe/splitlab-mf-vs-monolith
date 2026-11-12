@@ -9,6 +9,7 @@ import { emit, on, failedModules, type BusEvent } from './bus'
 import { formatUAH, type CartItem, type Order, type Product } from './products'
 import { injectStyles } from './styles'
 import { hostCss } from './hostCss'
+import { reportRuntime } from './runtimeProbe'
 
 export type Mode = 'mf' | 'monolith'
 type Unmount = (() => void) & { update?: (p: any) => void }
@@ -107,6 +108,13 @@ export function HostApp({ mode, loaders }: { mode: Mode; loaders: Loaders }) {
 
   useEffect(() => localStorage.setItem(`${mode}-cart`, JSON.stringify(cart)), [cart, mode])
   useEffect(() => localStorage.setItem(`${mode}-orders`, JSON.stringify(orders)), [orders, mode])
+
+  useEffect(() => {
+    const modules = Object.fromEntries(
+      Object.entries(metas).map(([k, m]) => [k, { version: m.version, framework: m.framework, mountMs: m.ms }]),
+    )
+    reportRuntime(mode, modules)
+  }, [mode, metas])
 
   useEffect(() => {
     const offs = [

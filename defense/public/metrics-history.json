@@ -1,0 +1,13 @@
+[
+  {
+    "measuredAt": "2026-10-19T13:27:09.733Z",
+    "node": "v24.19.0",
+    "results": [
+      { "name": "monolith", "arch": "monolith", "buildMs": 1072, "gzipBytes": 102420 },
+      { "name": "shell", "arch": "mf", "buildMs": 1149, "gzipBytes": 77804 },
+      { "name": "catalog", "arch": "mf", "buildMs": 1272, "gzipBytes": 7809 },
+      { "name": "checkout", "arch": "mf", "buildMs": 1356, "gzipBytes": 7914 },
+      { "name": "reviews", "arch": "mf", "buildMs": 1343, "gzipBytes": 49524 }
+    ]
+  }
+]

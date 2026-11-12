@@ -12,3 +12,6 @@ Thumbs.db
 coverage/
 .turbo/
 *.tsbuildinfo
+
+defense/public/last-report.json
+defense/public/last-report.md

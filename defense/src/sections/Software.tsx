@@ -6,7 +6,8 @@ const MODULES = [
   { name: 'monolith', port: ':5300', role: 'Ті самі функції, один бандл', stack: 'React + Vue' },
   { name: 'shared/', port: '—', role: 'HostApp, bus, products, styles', stack: 'TS' },
   { name: 'defense/', port: ':5100', role: 'UI демо СПЛІТЛАБ для захисту', stack: 'React' },
-  { name: 'scripts/measure.mjs', port: 'CLI', role: 'Збірник метрик збірки і gzip', stack: 'Node' },
+  { name: 'scripts/measure.mjs', port: 'CLI', role: 'Збірник метрик збірки і gzip + історія', stack: 'Node' },
+  { name: 'scripts/lab-control.mjs', port: ':5111', role: 'Stop/Start remotes, live release, report API', stack: 'Node' },
 ]
 
 export function Software() {
@@ -69,7 +70,8 @@ npm start
 # demo      http://localhost:5100
 # MF        http://localhost:5200
 # monolith  http://localhost:5300
-npm run measure`}</pre>
+npm run measure
+# lab-api  http://localhost:5111`}</pre>
         </div>
       </div>
     </section>

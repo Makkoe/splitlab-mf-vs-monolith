@@ -8,8 +8,9 @@ import { on, emit } from '../../../shared/bus'
 import { injectStyles } from '../../../shared/styles'
 import type { Product } from '../../../shared/products'
 import { css } from './styles'
+import versionInfo from '../version.json'
 
-export const meta = { name: 'reviews', team: 'Команда Community', framework: 'Vue 3', version: '0.9.4' }
+export const meta = { name: 'reviews', team: 'Команда Community', framework: 'Vue 3', version: versionInfo.version }
 
 interface Review { id: number; productId: number; author: string; stars: number; text: string }
 

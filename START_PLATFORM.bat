@@ -22,7 +22,10 @@ echo   - MF Shell (Host Container)     : http://localhost:5200
 echo   - MF Catalog Remote             : http://localhost:5201
 echo   - MF Checkout Remote            : http://localhost:5202
 echo   - MF Reviews Remote (Vue 3)     : http://localhost:5203
-echo   - Monolith App (Control Group)  : http://localhost:5300
+echo   - Monolith App (preview build)  : http://localhost:5300
+echo   - lab-control API               : http://localhost:5111
+echo.
+echo   Live experiments: Arena Stop/Start, Deploy release, Runtime, Report
 echo.
 echo [3/3] Opening SplitLab dashboard in default browser...
 start http://localhost:5100
